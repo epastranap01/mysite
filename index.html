@@ -3,120 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Para Rifa de Boletos</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #4a4a4a;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 12px 24px;
-            font-size: 18px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #ganadores {
-            margin-top: 30px;
-            font-size: 1.2em;
-            color: #555;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        #searching {
-            font-size: 1.5em;
-            margin-top: 20px;
-            color: #4CAF50;
-            height: 30px;
-        }
-        .winner {
-            font-size: 2em;
-            color: #e63946;
-            margin-top: 20px;
-            animation: fadeIn 1s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-    </style>
+    <title>Plan de Ahorros</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Rifa de Premios para obtener Ganador</h1>
-        <button onclick="sacarGanadores()">Sacar Ganadores</button>
-        <div id="searching"></div>
-        <div id="ganadores"></div>
+    <div class="container mt-5">
+        <h2 class="text-center">Plan de Ahorros</h2>
+
+        <div class="summary text-center mt-4">
+            <h3>Total Ahorros</h3>
+            <p>Edis: <span id="totalEdis">L. 0</span></p>
+            <p>Dania: <span id="totalDania">L. 0</span></p>
+            <p>Total General: <span id="totalGeneral">L. 0</span></p>
+        </div>
+
+        <form id="ahorrosForm" class="form mt-4">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="monto">Monto (L):</label>
+                    <input type="number" class="form-control" id="monto" name="monto" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="persona">Persona:</label>
+                    <select id="persona" name="persona" class="form-control" multiple required>
+                        <option value="Edis">Edis</option>
+                        <option value="Dania">Dania</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success btn-block" onclick="agregarAhorro()"><i class="fas fa-plus"></i> Agregar</button>
+        </form>
+
+        <h3 class="text-center mt-5">Ahorros</h3>
+        <table class="table table-striped mt-3" id="ahorrosTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Edis</th>
+                    <th>Dania</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se agregarán las filas dinámicamente -->
+            </tbody>
+        </table>
     </div>
 
-    <script>
-        function sacarGanadores() {
-            const boletos = Array.from({ length: 500 }, (_, i) => (i + 1).toString().padStart(3, '0'));
-            const ganadores = [];
-            let interval;
-
-            document.getElementById('ganadores').innerHTML = 'Y los ganadores son...';
-            document.getElementById('searching').innerHTML = 'Buscando...';
-
-            interval = setInterval(() => {
-                const randomBoleto = boletos[Math.floor(Math.random() * boletos.length)];
-                document.getElementById('searching').innerHTML = randomBoleto;
-            }, 100);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                const ganador1 = boletos[Math.floor(Math.random() * boletos.length)];
-                ganadores.push(ganador1);
-                document.getElementById('ganadores').innerHTML = `
-                    <div class="winner">
-                        Felicidades Ganador 1:<br> 
-                        <strong>${ganador1}</strong><br>
-                        Primer Premio: Lavadora
-                    </div>`;
-
-                interval = setInterval(() => {
-                    const randomBoleto = boletos[Math.floor(Math.random() * boletos.length)];
-                    document.getElementById('searching').innerHTML = randomBoleto;
-                }, 100);
-
-                setTimeout(() => {
-                    clearInterval(interval);
-                    let ganador2;
-                    do {
-                        ganador2 = boletos[Math.floor(Math.random() * boletos.length)];
-                    } while (ganador2 === ganadores[0]);
-                    ganadores.push(ganador2);
-                    document.getElementById('ganadores').innerHTML += `
-                        <div class="winner">
-                            Felicidades Ganador 2:<br> 
-                            <strong>${ganador2}</strong><br>
-                            Segundo Premio: Estufa
-                        </div>`;
-                    document.getElementById('searching').innerHTML = '';
-                }, 3000);
-
-            }, 3000);
-        }
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
